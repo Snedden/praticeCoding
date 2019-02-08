@@ -29,8 +29,8 @@ public class LatticeNode {
     if(this.right != null){
       neigh.add(this.right);
     }
-    if(this.top != null){
-      neigh.add(this.top);
+    if(this.bottom != null){
+      neigh.add(this.bottom);
     }
     return neigh;
   }
