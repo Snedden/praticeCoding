@@ -7,11 +7,28 @@ import java.util.Set;
 
 public class Tester {
   public static void main(String[] args){
-    String mapStr1= "X__;_OT;___";
-    drawMap(mapStr1);
-
+    // 1 -2
+    String mapStr1= "X__;O_T;___";
+    System.out.print("////////");
     int steps = Path.stepsTo(mapStr1);
     System.out.println("Steps "+steps);
+    drawMap(mapStr1);
+
+    //2 - -1
+    String mapStr2= "O__;_XX_;_XT";
+    System.out.print("////////");
+    int steps2 = Path.stepsTo(mapStr2);
+    System.out.println("Steps "+steps2);
+    drawMap(mapStr2);
+
+    //2 - 3
+    String mapStr3= "___;OX_;_XT";
+    System.out.print("////////");
+    int steps3 = Path.stepsTo(mapStr3);
+    System.out.println("Steps "+steps3);
+    drawMap(mapStr3);
+
+
   }
 
   public static void drawMap(String mapStr){
@@ -25,7 +42,7 @@ public class Tester {
 
       System.out.print(" "+n.symbol+" ");
 
-      if(n.right.right != null){
+      if(n.right!= null){
         System.out.print("<->");
         drawMap(n.right);
 

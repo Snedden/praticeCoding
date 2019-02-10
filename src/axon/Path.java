@@ -16,72 +16,66 @@ public class Path {
     String[] mapStrArr = mapStr.split(";");
     int rows = mapStrArr.length;
     int cols = mapStrArr[rows-1].length();
-    createMapHelper(root, mapStrArr, 0, 0, rows, cols);
+    createMap(root, mapStrArr);
     return root;
 
   }
 
-  private static void createMapHelper2(LatticeNode n,String[] st){
-    LatticeNode prevRow;
+  private static void createMap(LatticeNode n,String[] st){
+
     LatticeNode curRow = n;
+    LatticeNode p;
+    LatticeNode prevRow = n;
+    boolean firstRow = true;
 
     for(String s: st){
-
-    }
-  }
-
-  private static void createMapHelper(LatticeNode n,String[] s, int i, int j,int rows, int cols){
-    if(n != null){
-      if(i > rows && j > cols ){
-        return;
-      }
-        //Create new node
-        n.symbol = s[i].charAt(j);
-        if(n.symbol == 'O'){
-          cop = n;
-        }
-        if(j < cols){
+      for(char c:s.toCharArray()){
+        if(c != ';'){
+          n.symbol = c;
+          if(n.symbol == 'O'){
+            cop = n;
+          }
           n.right = new LatticeNode();
           n.right.left = n;
+          n = n.right;
+        }else{
+          break;
         }
-        if(j != 0){
-          n.left = new LatticeNode();
-          n.left.right = n;
+      }
+      if(!firstRow){
+        n = curRow;
+        //Thread top and bottom rows
+        while(n.right != null){
+          prevRow.bottom = n;
+          n.top = prevRow;
+          n= n.right;
+          prevRow = prevRow.right;
+        }
+        prevRow = curRow;
 
-        }
-        if(i != 0){
-          n.top = new LatticeNode();
-          n.top.bottom = new LatticeNode();
-        }
-        if(i != rows - 1){
-          n.bottom = new LatticeNode();
-          n.bottom.top = new LatticeNode();
-        }
-
-        //Create next right nodes
-        if(j+1 < cols){
-          createMapHelper(n.right,s, i, j+1, rows, cols);
-        }
-
-        //Create next bottom node
-        if(i+1 < rows){
-          if(i!=rows){
-            cols = s[i+1].length();
-          }
-          createMapHelper(n.bottom, s, i+1, 0, rows, cols);
-        }
+      }
+      firstRow = false;
+      curRow.bottom = new LatticeNode();
+      curRow = curRow.bottom;
+      n = curRow;
+      //next row at bot
     }
-
   }
 
+
+  /**
+   * Find the shortest path to target
+   * @return steps of the shorted path
+   */
   public static int pathBSF(){
     LinkedList<LatticeNode> queue = new LinkedList<>();
     queue.add(cop);
-    int steps = Integer.MAX_VALUE;
+    int steps = -1;
 
     while(!queue.isEmpty()){
       LatticeNode cur = queue.removeFirst();
       cur.visited =true;
+
       if(cur.symbol == 'T'){
         steps = cur.steps;
         break;
@@ -89,7 +83,7 @@ public class Path {
 
       for(LatticeNode n:cur.getNeighbours()){
         if(!n.visited && n.symbol != 'X'){
-          n.steps++;
+          n.steps = cur.steps +1;
           queue.add(n);
         }
       }
